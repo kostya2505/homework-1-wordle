@@ -10,11 +10,11 @@ public final class Main {
 
     private Main() {}
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         LOG.debug("Аргументы запуска: {}", String.join(" ", args));
 
         Dictionary dictionary = DictionaryLoader.load();
-        LOG.info("Словарь загружен: {} слов", dictionary.size());
+        LOG.info("Словарь загружен: {} слова", dictionary.size());
 
         GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, 42L);
         LOG.info("Сессия начата: maxAttempts={}, status={}", session.getMaxAttempts(), session.getStatus());

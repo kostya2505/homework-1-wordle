@@ -13,7 +13,12 @@ public final class Main {
     public static void main(String[] args) {
         LOG.debug("Аргументы запуска: {}", String.join(" ", args));
 
-        // TODO: запустить игру.
+        Dictionary dictionary = DictionaryLoader.load();
+        LOG.info("Словарь загружен: {} слов", dictionary.size());
+
+        GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, 42L);
+        LOG.info("Сессия начата: maxAttempts={}, status={}", session.getMaxAttempts(), session.getStatus());
+
         System.out.println("«5 букв» — шаблон проекта Т-Академии.");
         System.out.println("Игра ещё не реализована. Начни с README.");
     }

@@ -5,14 +5,12 @@ import java.util.Objects;
 
 /**
  * Represents a dictionary of words.
- * <p>
- * The dictionary is immutable and contains only words of a fixed length (5 letters).
+ *
+ * <p>The dictionary is immutable and contains only words of a fixed length (5 letters).
  */
 public record Dictionary(List<String> words) {
 
-    /**
-     * The fixed length of words in the dictionary.
-     */
+    /** The fixed length of words in the dictionary. */
     public static final int WORD_LENGTH = 5;
 
     /**
@@ -32,7 +30,8 @@ public record Dictionary(List<String> words) {
                 throw new IllegalArgumentException("В словаре не может быть null");
             }
             if (word.length() != WORD_LENGTH) {
-                throw new IllegalArgumentException("Длина слова должна быть " + WORD_LENGTH + " букв, получено " + word.length() + " букв");
+                throw new IllegalArgumentException(
+                        "Длина слова должна быть " + WORD_LENGTH + " букв, получено " + word.length() + " букв");
             }
         }
         this.words = List.copyOf(words);

@@ -5,29 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents a game session with a specific answer, maximum attempts, and history of attempts.
- */
+/** Represents a game session with a specific answer, maximum attempts, and history of attempts. */
 public class GameSession {
 
-    /**
-     * The answer to be guessed in the game.
-     */
+    /** The answer to be guessed in the game. */
     private final String answer;
 
-    /**
-     * The maximum number of attempts allowed in the game.
-     */
+    /** The maximum number of attempts allowed in the game. */
     private final int maxAttempts;
 
-    /**
-     * A history of attempts made in the game.
-     */
+    /** A history of attempts made in the game. */
     private final List<String> attemptsHistory = new ArrayList<>();
 
-    /**
-     * The current status of the game.
-     */
+    /** The current status of the game. */
     private GameStatus status = GameStatus.IN_PROGRESS;
 
     /**
@@ -41,7 +31,8 @@ public class GameSession {
     public GameSession(String answer, int maxAttempts) {
         Objects.requireNonNull(answer, "answer");
         if (answer.length() != Dictionary.WORD_LENGTH) {
-            throw new IllegalArgumentException("Слова должны иметь только " + Dictionary.WORD_LENGTH + " букв, получено: " + answer.length() + " букв");
+            throw new IllegalArgumentException("Слова должны иметь только " + Dictionary.WORD_LENGTH
+                    + " букв, получено: " + answer.length() + " букв");
         }
         if (maxAttempts < 1) {
             throw new IllegalArgumentException("Максимальное количество попыток должно быть больше 0: " + maxAttempts);

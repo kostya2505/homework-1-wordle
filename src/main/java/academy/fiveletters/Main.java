@@ -9,9 +9,10 @@ public final class Main {
     /** Логгер для логирования информации и ошибок. */
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    /**
-     * Приватный конструктор для запрета создания экземпляров этого класса.
-     */
+    /** Константа для значения seed. */
+    private static final long SEED = 42L;
+
+    /** Приватный конструктор для запрета создания экземпляров этого класса. */
     private Main() {}
 
     /**
@@ -25,7 +26,7 @@ public final class Main {
         Dictionary dictionary = DictionaryLoader.load();
         LOG.info("Словарь загружен: {} слова", dictionary.size());
 
-        GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, 42L);
+        GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, SEED);
         LOG.info("Сессия начата: maxAttempts={}, status={}", session.getMaxAttempts(), session.getStatus());
 
         System.out.println("«5 букв» — шаблон проекта Т-Академии.");

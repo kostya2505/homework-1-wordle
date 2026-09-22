@@ -3,12 +3,11 @@ package academy.fiveletters.mandatory.mr1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import academy.fiveletters.DictionaryLoader;
 import academy.fiveletters.Dictionary;
+import academy.fiveletters.DictionaryLoader;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 /** Обязательные тесты: словарь. */
 @DisplayName("MR1. Словарь")
@@ -19,9 +18,7 @@ class DictionaryTest {
     void dictionaryContainsAtLeastFiftyWords() {
         Dictionary dictionary = DictionaryLoader.load();
 
-        assertThat(dictionary.size())
-            .as("словарь из dictionary.txt")
-            .isGreaterThanOrEqualTo(50);
+        assertThat(dictionary.size()).as("словарь из dictionary.txt").isGreaterThanOrEqualTo(50);
     }
 
     @Test
@@ -30,17 +27,16 @@ class DictionaryTest {
         Dictionary dictionary = DictionaryLoader.load();
 
         assertThat(dictionary.words())
-            .isNotEmpty()
-            .allSatisfy(word -> assertThat(word)
-                .as("слово из dictionary.txt")
-                .hasSize(Dictionary.WORD_LENGTH));
+                .isNotEmpty()
+                .allSatisfy(
+                        word -> assertThat(word).as("слово из dictionary.txt").hasSize(Dictionary.WORD_LENGTH));
     }
 
     @Test
     @DisplayName("Пустой словарь приводит к ошибке, а не к запуску игры без слова")
     void emptyDictionaryIsRejected() {
         assertThatThrownBy(() -> new Dictionary(List.of()))
-            .as("пустой список слов не может быть принят конструктором")
-            .isInstanceOf(IllegalArgumentException.class);
+                .as("пустой список слов не может быть принят конструктором")
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -10,19 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * The {@code DictionaryLoader} class provides methods for loading and parsing a dictionary file.
- */
-public class DictionaryLoader {
+/** The {@code DictionaryLoader} class provides methods for loading and parsing a dictionary file. */
+public final class DictionaryLoader {
 
-    /**
-     * The default resource path for the dictionary file.
-     */
+    /** The default resource path for the dictionary file. */
     public static final String DEFAULT_RESOURCE = "/dictionary.txt";
 
-    /**
-     * Private constructor to prevent instantiation of the utility class.
-     */
+    /** Private constructor to prevent instantiation of the utility class. */
     private DictionaryLoader() {}
 
     /**
@@ -68,7 +62,7 @@ public class DictionaryLoader {
             String line;
             while ((line = reader.readLine()) != null) {
                 String trimmedLine = line.trim();
-                if (trimmedLine.isEmpty() ||  trimmedLine.startsWith("#")) {
+                if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
                     continue;
                 }
                 words.add(trimmedLine);

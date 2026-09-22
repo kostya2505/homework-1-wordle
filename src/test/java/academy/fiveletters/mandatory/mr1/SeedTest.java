@@ -2,15 +2,14 @@ package academy.fiveletters.mandatory.mr1;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import academy.fiveletters.DictionaryLoader;
 import academy.fiveletters.Dictionary;
+import academy.fiveletters.DictionaryLoader;
 import academy.fiveletters.Game;
 import academy.fiveletters.GameSession;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /** Обязательные тесты: одинаковый seed обязан давать одинаковое загаданное слово. */
 @DisplayName("MR1. Воспроизводимость по seed")
@@ -27,8 +26,8 @@ class SeedTest {
         GameSession secondGameSession = Game.startGame(dictionary, MAX_ATTEMPTS, 42L);
 
         assertThat(secondGameSession.getAnswer())
-            .as("repeat with the same seed")
-            .isEqualTo(firstGameSession.getAnswer());
+                .as("repeat with the same seed")
+                .isEqualTo(firstGameSession.getAnswer());
     }
 
     @Test
@@ -41,8 +40,6 @@ class SeedTest {
             answers.add(Game.startGame(dictionary, MAX_ATTEMPTS, seed).getAnswer());
         }
 
-        assertThat(answers)
-            .as("more than one word on 100 different seeds")
-            .hasSizeGreaterThan(1);
+        assertThat(answers).as("more than one word on 100 different seeds").hasSizeGreaterThan(1);
     }
 }

@@ -6,10 +6,19 @@ import org.slf4j.LoggerFactory;
 /** Точка входа в игру «5 букв». */
 public final class Main {
 
+    /** Логгер для логирования информации и ошибок. */
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * Приватный конструктор для запрета создания экземпляров этого класса.
+     */
     private Main() {}
 
+    /**
+     * Основной метод программы, который запускает приложение.
+     *
+     * @param args Массив строковых аргументов, переданных при запуске программы.
+     */
     static void main(String[] args) {
         LOG.debug("Аргументы запуска: {}", String.join(" ", args));
 

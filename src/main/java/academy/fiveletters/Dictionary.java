@@ -3,11 +3,9 @@ package academy.fiveletters;
 import java.util.List;
 import java.util.Objects;
 
-public final class Dictionary {
+public record Dictionary(List<String> words) {
 
     public static final int WORD_LENGTH = 5;
-
-    private final List<String> words;
 
     public Dictionary(List<String> words) {
         Objects.requireNonNull(words, "words");
@@ -23,10 +21,6 @@ public final class Dictionary {
             }
         }
         this.words = List.copyOf(words);
-    }
-
-    public List<String> words() {
-        return words;
     }
 
     public int size() {

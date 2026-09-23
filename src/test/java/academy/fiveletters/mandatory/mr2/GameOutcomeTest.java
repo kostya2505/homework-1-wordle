@@ -3,11 +3,11 @@ package academy.fiveletters.mandatory.mr2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import academy.fiveletters.Dictionary;
-import academy.fiveletters.Game;
-import academy.fiveletters.GameSession;
-import academy.fiveletters.GameStatus;
-import academy.fiveletters.GuessResult;
+import academy.fiveletters.game.Dictionary;
+import academy.fiveletters.game.Game;
+import academy.fiveletters.game.GameSession;
+import academy.fiveletters.game.GameStatus;
+import academy.fiveletters.game.GuessResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

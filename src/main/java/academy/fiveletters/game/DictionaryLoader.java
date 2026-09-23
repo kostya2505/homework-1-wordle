@@ -1,4 +1,4 @@
-package academy.fiveletters;
+package academy.fiveletters.game;
 
 import java.io.BufferedReader;
 import java.io.IOException;

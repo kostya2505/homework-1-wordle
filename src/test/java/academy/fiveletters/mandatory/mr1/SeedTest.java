@@ -2,10 +2,10 @@ package academy.fiveletters.mandatory.mr1;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import academy.fiveletters.Dictionary;
-import academy.fiveletters.DictionaryLoader;
-import academy.fiveletters.Game;
-import academy.fiveletters.GameSession;
+import academy.fiveletters.game.Dictionary;
+import academy.fiveletters.game.DictionaryLoader;
+import academy.fiveletters.game.Game;
+import academy.fiveletters.game.GameSession;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;

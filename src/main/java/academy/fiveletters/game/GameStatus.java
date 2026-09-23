@@ -1,4 +1,4 @@
-package academy.fiveletters;
+package academy.fiveletters.game;
 
 /** Represents the status of a game. */
 public enum GameStatus {

@@ -1,4 +1,4 @@
-package academy.fiveletters;
+package academy.fiveletters.game;
 
 import java.util.ArrayList;
 import java.util.Collections;

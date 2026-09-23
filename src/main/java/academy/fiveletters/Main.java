@@ -1,5 +1,9 @@
 package academy.fiveletters;
 
+import academy.fiveletters.game.Dictionary;
+import academy.fiveletters.game.DictionaryLoader;
+import academy.fiveletters.game.Game;
+import academy.fiveletters.game.GameSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

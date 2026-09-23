@@ -1,5 +1,7 @@
 package academy.fiveletters;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -32,7 +34,77 @@ public final class Game {
         }
         Random random = new Random(seed);
         String answer = dictionary.words().get(random.nextInt(dictionary.size()));
-        return new GameSession(answer, maxAttempts);
+        return new GameSession(dictionary, answer, maxAttempts);
+    }
+
+    public static GuessResult applyGuess(GameSession session, String rawGuess) {
+        Objects.requireNonNull(session, "session");
+
+        if (session.getStatus() != GameStatus.IN_PROGRESS) {
+            throw new IllegalStateException(
+                    "Игра завершена со статусом " + session.getStatus() + ", новые попытки не принимаются");
+        }
+
+        String guess = normalizeAndValidate(rawGuess, session.dictionary());
+        List<LetterStatus> statuses = markLetters(session.getAnswer(), guess);
+
+        session.addAttempt(guess);
+        if (guess.equals(session.getAnswer())) {
+            session.setStatus(GameStatus.WIN);
+        } else if (session.getAttemptsUsed() >= session.getMaxAttempts()) {
+            session.setStatus(GameStatus.LOSE);
+        }
+
+        return new GuessResult(guess, statuses, session.getStatus());
+    }
+
+    private static String normalizeAndValidate(String rawGuess, Dictionary dictionary) {
+        if (rawGuess == null) {
+            throw new InvalidGuessException("Ввод не может быть null");
+        }
+        String guess = rawGuess.toLowerCase(Locale.ROOT);
+        if (guess.length() != Dictionary.WORD_LENGTH) {
+            throw new InvalidGuessException(
+                    "Ожидалось ровно " + Dictionary.WORD_LENGTH + " букв, получено " + guess.length());
+        }
+        for (int i = 0; i < guess.length(); i++) {
+            if (!Character.isLetter(guess.charAt(i))) {
+                throw new InvalidGuessException("Допустимы только буквы: \"" + rawGuess + "\"");
+            }
+        }
+        if (!dictionary.contains(guess)) {
+            throw new InvalidGuessException("Слова нет в словаре: \"" + guess + "\"");
+        }
+        return guess;
+    }
+
+    static List<LetterStatus> markLetters(String answer, String guess) {
+        int n = Dictionary.WORD_LENGTH;
+        LetterStatus[] result = new LetterStatus[n];
+        boolean[] marked = new boolean[n];
+
+        for (int i = 0; i < n; i++) {
+            if (guess.charAt(i) == answer.charAt(i)) {
+                result[i] = LetterStatus.CORRECT;
+                marked[i] = true;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            if (result[i] != null) continue;
+            char letter = guess.charAt(i);
+            boolean found = false;
+            for (int j = 0; j < n; j++) {
+                if (!marked[j] && answer.charAt(j) == letter) {
+                    result[i] = LetterStatus.PRESENT;
+                    marked[j] = true;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) result[i] = LetterStatus.ABSENT;
+        }
+
+        return List.of(result);
     }
 
     /**

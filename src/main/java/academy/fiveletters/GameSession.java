@@ -8,6 +8,8 @@ import java.util.Objects;
 /** Represents a game session with a specific answer, maximum attempts, and history of attempts. */
 public class GameSession {
 
+    private final Dictionary dictionary;
+
     /** The answer to be guessed in the game. */
     private final String answer;
 
@@ -28,11 +30,15 @@ public class GameSession {
      * @throws IllegalArgumentException if the answer is null or does not have the correct length
      * @throws IllegalArgumentException if the maximum attempts is less than 1
      */
-    public GameSession(String answer, int maxAttempts) {
+    public GameSession(Dictionary dictionary, String answer, int maxAttempts) {
+        this.dictionary = Objects.requireNonNull(dictionary, "dictionary");
         Objects.requireNonNull(answer, "answer");
         if (answer.length() != Dictionary.WORD_LENGTH) {
             throw new IllegalArgumentException("Слова должны иметь только " + Dictionary.WORD_LENGTH
                     + " букв, получено: " + answer.length() + " букв");
+        }
+        if (!dictionary.contains(answer)) {
+            throw new IllegalArgumentException("Загаданное слово отсутствует в словаре: \"" + answer + "\"");
         }
         if (maxAttempts < 1) {
             throw new IllegalArgumentException("Максимальное количество попыток должно быть больше 0: " + maxAttempts);
@@ -84,6 +90,10 @@ public class GameSession {
      */
     public GameStatus getStatus() {
         return status;
+    }
+
+    Dictionary dictionary() {
+        return dictionary;
     }
 
     /**

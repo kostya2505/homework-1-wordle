@@ -29,6 +29,7 @@ public final class Main {
         GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, SEED);
         LOG.info("Сессия начата: maxAttempts={}, status={}", session.getMaxAttempts(), session.getStatus());
 
+        System.out.println("Сессия создана. Игровой цикл — в MR3.");
         System.out.println("«5 букв» — шаблон проекта Т-Академии.");
         System.out.println("Игра ещё не реализована. Начни с README.");
     }

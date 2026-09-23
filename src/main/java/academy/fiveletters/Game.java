@@ -90,7 +90,9 @@ public final class Game {
             }
         }
         for (int i = 0; i < n; i++) {
-            if (result[i] != null) continue;
+            if (result[i] != null) {
+                continue;
+            }
             char letter = guess.charAt(i);
             boolean found = false;
             for (int j = 0; j < n; j++) {
@@ -101,7 +103,9 @@ public final class Game {
                     break;
                 }
             }
-            if (!found) result[i] = LetterStatus.ABSENT;
+            if (!found) {
+                result[i] = LetterStatus.ABSENT;
+            }
         }
 
         return List.of(result);

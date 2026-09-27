@@ -12,8 +12,8 @@ import java.io.UncheckedIOException;
 import java.util.Objects;
 
 /**
- * The GameRunner class handles the execution of a game session in the console.
- * It interacts with the user to receive guesses and provides feedback on the progress of the game.
+ * The GameRunner class handles the execution of a game session in the console. It interacts with the user to receive
+ * guesses and provides feedback on the progress of the game.
  */
 public final class GameRunner {
 
@@ -34,8 +34,8 @@ public final class GameRunner {
     /**
      * Constructs a new GameRunner with the specified input, output, and game session.
      *
-     * @param in          the input stream to read user commands
-     * @param out         the output stream to print game messages
+     * @param in the input stream to read user commands
+     * @param out the output stream to print game messages
      * @param gameSession the game session to manage
      */
     public GameRunner(BufferedReader in, PrintStream out, GameSession gameSession) {
@@ -44,9 +44,7 @@ public final class GameRunner {
         this.gameSession = Objects.requireNonNull(gameSession);
     }
 
-    /**
-     * Runs the game session, allowing the user to make guesses and receive feedback until the game is complete.
-     */
+    /** Runs the game session, allowing the user to make guesses and receive feedback until the game is complete. */
     public void run() {
         while (gameSession.status() == GameStatus.IN_PROGRESS) {
             out.print("> ");
@@ -64,8 +62,8 @@ public final class GameRunner {
 
                 if (result.isWin()) {
                     out.println("Победа! Слово угадано за "
-                        + gameSession.attemptsUsed() + " "
-                        + attemptsWord(gameSession.attemptsUsed()));
+                            + gameSession.attemptsUsed() + " "
+                            + attemptsWord(gameSession.attemptsUsed()));
                 } else if (result.isLose()) {
                     out.println("Неудача. Загаданное слово: " + gameSession.answer());
                 } else {

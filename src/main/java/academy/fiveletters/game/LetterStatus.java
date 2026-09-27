@@ -1,8 +1,6 @@
 package academy.fiveletters.game;
 
-/**
- * The {@code LetterStatus} enum represents the possible statuses a letter can have in a word guess game.
- */
+/** The {@code LetterStatus} enum represents the possible statuses a letter can have in a word guess game. */
 public enum LetterStatus {
     /** Indicates that a letter is in the correct position. */
     CORRECT("✅"),

@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents a command to check word guesses against an answer.
- */
+/** Represents a command to check word guesses against an answer. */
 public final class CheckCommand {
 
     private final PrintStream out;
@@ -22,7 +20,7 @@ public final class CheckCommand {
     /**
      * Constructs a new CheckCommand with the specified output stream and dictionary.
      *
-     * @param out       the output stream to use for printing messages
+     * @param out the output stream to use for printing messages
      * @param dictionary the dictionary to use for the game
      */
     public CheckCommand(PrintStream out, Dictionary dictionary) {
@@ -109,8 +107,8 @@ public final class CheckCommand {
      * Requires a value for a command line flag.
      *
      * @param args the command line arguments
-     * @param i    the index of the flag value
-     * @param s    the flag name
+     * @param i the index of the flag value
+     * @param s the flag name
      * @return the flag value
      * @throws IllegalArgumentException if the flag value is missing
      */

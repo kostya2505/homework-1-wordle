@@ -3,9 +3,7 @@ package academy.fiveletters.cli;
 import academy.fiveletters.game.GuessResult;
 import academy.fiveletters.game.LetterStatus;
 
-/**
- * The ResultFormatter class formats the result of a guess for display in the console.
- */
+/** The ResultFormatter class formats the result of a guess for display in the console. */
 public final class ResultFormatter {
 
     /**

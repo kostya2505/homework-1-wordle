@@ -32,8 +32,7 @@ public final class Main {
         Dictionary dictionary = DictionaryLoader.load();
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
-        Supplier<GameSession> gameSessionSupplier =
-                () -> Game.startGame(dictionary);
+        Supplier<GameSession> gameSessionSupplier = () -> Game.startGame(dictionary);
 
         new ConsoleApp(in, System.out, gameSessionSupplier).run();
     }

@@ -3,9 +3,7 @@ package academy.fiveletters.game;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents the result of a guess in a game session.
- */
+/** Represents the result of a guess in a game session. */
 public final class GuessResult {
 
     private final String guess;

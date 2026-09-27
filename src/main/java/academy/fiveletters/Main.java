@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.function.Supplier;
 
 /** Точка входа в игру «5 букв». */
@@ -32,10 +31,9 @@ public final class Main {
 
         Dictionary dictionary = DictionaryLoader.load();
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-        Random random = new Random();
 
         Supplier<GameSession> gameSessionSupplier =
-                () -> Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, random.nextLong());
+                () -> Game.startGame(dictionary);
 
         new ConsoleApp(in, System.out, gameSessionSupplier).run();
     }

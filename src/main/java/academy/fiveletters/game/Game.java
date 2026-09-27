@@ -40,22 +40,22 @@ public final class Game {
     public static GuessResult applyGuess(GameSession session, String rawGuess) {
         Objects.requireNonNull(session, "session");
 
-        if (session.getStatus() != GameStatus.IN_PROGRESS) {
+        if (session.status() != GameStatus.IN_PROGRESS) {
             throw new IllegalStateException(
-                    "Игра завершена со статусом " + session.getStatus() + ", новые попытки не принимаются");
+                    "Игра завершена со статусом " + session.status() + ", новые попытки не принимаются");
         }
 
         String guess = normalizeAndValidate(rawGuess, session.dictionary());
-        List<LetterStatus> statuses = markLetters(session.getAnswer(), guess);
+        List<LetterStatus> statuses = markLetters(session.answer(), guess);
 
         session.addAttempt(guess);
-        if (guess.equals(session.getAnswer())) {
+        if (guess.equals(session.answer())) {
             session.setStatus(GameStatus.WIN);
-        } else if (session.getAttemptsUsed() >= session.getMaxAttempts()) {
+        } else if (session.attemptsUsed() >= session.maxAttempts()) {
             session.setStatus(GameStatus.LOSE);
         }
 
-        return new GuessResult(guess, statuses, session.getStatus());
+        return new GuessResult(guess, statuses, session.status());
     }
 
     private static String normalizeAndValidate(String rawGuess, Dictionary dictionary) {

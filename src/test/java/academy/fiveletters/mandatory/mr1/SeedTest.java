@@ -25,9 +25,7 @@ class SeedTest {
         GameSession firstGameSession = Game.startGame(dictionary, MAX_ATTEMPTS, 42L);
         GameSession secondGameSession = Game.startGame(dictionary, MAX_ATTEMPTS, 42L);
 
-        assertThat(secondGameSession.getAnswer())
-                .as("repeat with the same seed")
-                .isEqualTo(firstGameSession.getAnswer());
+        assertThat(secondGameSession.answer()).as("repeat with the same seed").isEqualTo(firstGameSession.answer());
     }
 
     @Test
@@ -37,7 +35,7 @@ class SeedTest {
 
         Set<String> answers = new HashSet<>();
         for (long seed = 0; seed < 100; seed++) {
-            answers.add(Game.startGame(dictionary, MAX_ATTEMPTS, seed).getAnswer());
+            answers.add(Game.startGame(dictionary, MAX_ATTEMPTS, seed).answer());
         }
 
         assertThat(answers).as("more than one word on 100 different seeds").hasSizeGreaterThan(1);

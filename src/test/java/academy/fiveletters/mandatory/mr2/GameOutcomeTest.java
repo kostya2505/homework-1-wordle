@@ -31,8 +31,8 @@ class GameOutcomeTest {
         GuessResult last = Game.applyGuess(gameSession, ANSWER);
 
         assertThat(last.isWin()).isTrue();
-        assertThat(gameSession.getStatus()).isEqualTo(GameStatus.WIN);
-        assertThat(gameSession.getAttemptsUsed()).isEqualTo(2);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.WIN);
+        assertThat(gameSession.attemptsUsed()).isEqualTo(2);
         assertThatThrownBy(() -> Game.applyGuess(gameSession, GUESS)).isInstanceOf(IllegalStateException.class);
     }
 
@@ -45,9 +45,9 @@ class GameOutcomeTest {
             Game.applyGuess(gameSession, GUESS);
         }
 
-        assertThat(gameSession.getStatus()).isEqualTo(GameStatus.LOSE);
-        assertThat(gameSession.getAttemptsUsed()).isEqualTo(6);
-        assertThat(gameSession.getAnswer()).isEqualTo(ANSWER);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.LOSE);
+        assertThat(gameSession.attemptsUsed()).isEqualTo(6);
+        assertThat(gameSession.answer()).isEqualTo(ANSWER);
         assertThatThrownBy(() -> Game.applyGuess(gameSession, ANSWER)).isInstanceOf(IllegalStateException.class);
     }
 
@@ -60,8 +60,8 @@ class GameOutcomeTest {
             Game.applyGuess(gameSession, GUESS);
         }
 
-        assertThat(gameSession.getStatus()).isEqualTo(GameStatus.LOSE);
-        assertThat(gameSession.getAnswer())
+        assertThat(gameSession.status()).isEqualTo(GameStatus.LOSE);
+        assertThat(gameSession.answer())
                 .as("модель раскрывает ответ после поражения")
                 .isEqualTo(ANSWER);
     }
@@ -72,9 +72,9 @@ class GameOutcomeTest {
         GameSession gameSession = new GameSession(DICT, ANSWER, MAX_ATTEMPTS);
 
         Game.applyGuess(gameSession, ANSWER);
-        assertThat(gameSession.getStatus()).isEqualTo(GameStatus.WIN);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.WIN);
 
-        int attempts = gameSession.getAttemptsUsed();
+        int attempts = gameSession.attemptsUsed();
 
         assertThatThrownBy(() -> Game.applyGuess(gameSession, GUESS))
                 .as("партия завершена")
@@ -83,7 +83,7 @@ class GameOutcomeTest {
                 .as("партия завершена")
                 .isInstanceOf(IllegalStateException.class);
 
-        assertThat(gameSession.getAttemptsUsed())
+        assertThat(gameSession.attemptsUsed())
                 .as("попытки после завершения партии не учитываются")
                 .isEqualTo(attempts);
     }

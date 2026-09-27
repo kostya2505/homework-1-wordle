@@ -31,7 +31,7 @@ class GuessValidationTest {
         GameSession gameSession = new GameSession(DICT, ANSWER, MAX_ATTEMPTS);
 
         assertThatThrownBy(() -> Game.applyGuess(gameSession, guess)).isInstanceOf(InvalidGuessException.class);
-        assertThat(gameSession.getAttemptsUsed()).isZero();
+        assertThat(gameSession.attemptsUsed()).isZero();
     }
 
     @ParameterizedTest
@@ -41,7 +41,7 @@ class GuessValidationTest {
         GameSession gameSession = new GameSession(DICT, ANSWER, MAX_ATTEMPTS);
 
         assertThatThrownBy(() -> Game.applyGuess(gameSession, guess)).isInstanceOf(InvalidGuessException.class);
-        assertThat(gameSession.getAttemptsUsed()).isZero();
+        assertThat(gameSession.attemptsUsed()).isZero();
     }
 
     @Test
@@ -50,7 +50,7 @@ class GuessValidationTest {
         GameSession gameSession = new GameSession(DICT, ANSWER, MAX_ATTEMPTS);
 
         assertThatThrownBy(() -> Game.applyGuess(gameSession, "слово")).isInstanceOf(InvalidGuessException.class);
-        assertThat(gameSession.getAttemptsUsed()).isZero();
+        assertThat(gameSession.attemptsUsed()).isZero();
     }
 
     @Test
@@ -62,10 +62,10 @@ class GuessValidationTest {
         assertThatThrownBy(() -> Game.applyGuess(gameSession, "дом!!")).isInstanceOf(InvalidGuessException.class);
         assertThatThrownBy(() -> Game.applyGuess(gameSession, "слово")).isInstanceOf(InvalidGuessException.class);
 
-        assertThat(gameSession.getAttemptsUsed())
+        assertThat(gameSession.attemptsUsed())
                 .as("ни один некорректный ввод не тратит попытку")
                 .isZero();
-        assertThat(gameSession.getStatus()).isEqualTo(GameStatus.IN_PROGRESS);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.IN_PROGRESS);
     }
 
     @Test
@@ -79,9 +79,9 @@ class GuessValidationTest {
 
         assertThat(lowerResult.statuses()).as("ввод не зависит от регистра").isEqualTo(upperResult.statuses());
         assertThat(upperResult.guess()).as("ввод переводится в нижний регистр").isEqualTo("озеро");
-        assertThat(upper.getStatus())
+        assertThat(upper.status())
                 .as("регистр не влияет")
-                .isEqualTo(lower.getStatus())
+                .isEqualTo(lower.status())
                 .isEqualTo(GameStatus.WIN);
     }
 }

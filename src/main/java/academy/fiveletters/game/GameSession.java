@@ -52,7 +52,7 @@ public class GameSession {
      *
      * @return the answer
      */
-    public String getAnswer() {
+    public String answer() {
         return answer;
     }
 
@@ -61,7 +61,7 @@ public class GameSession {
      *
      * @return the maximum number of attempts
      */
-    public int getMaxAttempts() {
+    public int maxAttempts() {
         return maxAttempts;
     }
 
@@ -70,7 +70,7 @@ public class GameSession {
      *
      * @return the number of attempts used
      */
-    public int getAttemptsUsed() {
+    public int attemptsUsed() {
         return attemptsHistory.size();
     }
 
@@ -79,7 +79,7 @@ public class GameSession {
      *
      * @return an unmodifiable list of attempts
      */
-    public List<String> getAttemptsHistory() {
+    public List<String> attemptsHistory() {
         return Collections.unmodifiableList(attemptsHistory);
     }
 
@@ -88,7 +88,7 @@ public class GameSession {
      *
      * @return the game status
      */
-    public GameStatus getStatus() {
+    public GameStatus status() {
         return status;
     }
 

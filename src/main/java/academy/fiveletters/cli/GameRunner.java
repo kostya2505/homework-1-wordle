@@ -11,6 +11,10 @@ import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.util.Objects;
 
+/**
+ * The GameRunner class handles the execution of a game session in the console.
+ * It interacts with the user to receive guesses and provides feedback on the progress of the game.
+ */
 public final class GameRunner {
 
     private static final int DECIMAL_BASE = 10;
@@ -27,12 +31,22 @@ public final class GameRunner {
     private final GameSession gameSession;
     private final ResultFormatter formatter = new ResultFormatter();
 
+    /**
+     * Constructs a new GameRunner with the specified input, output, and game session.
+     *
+     * @param in          the input stream to read user commands
+     * @param out         the output stream to print game messages
+     * @param gameSession the game session to manage
+     */
     public GameRunner(BufferedReader in, PrintStream out, GameSession gameSession) {
         this.in = Objects.requireNonNull(in);
         this.out = Objects.requireNonNull(out);
         this.gameSession = Objects.requireNonNull(gameSession);
     }
 
+    /**
+     * Runs the game session, allowing the user to make guesses and receive feedback until the game is complete.
+     */
     public void run() {
         while (gameSession.status() == GameStatus.IN_PROGRESS) {
             out.print("> ");
@@ -50,8 +64,8 @@ public final class GameRunner {
 
                 if (result.isWin()) {
                     out.println("Победа! Слово угадано за "
-                            + gameSession.attemptsUsed() + " "
-                            + attemptsWord(gameSession.attemptsUsed()));
+                        + gameSession.attemptsUsed() + " "
+                        + attemptsWord(gameSession.attemptsUsed()));
                 } else if (result.isLose()) {
                     out.println("Неудача. Загаданное слово: " + gameSession.answer());
                 } else {
@@ -63,6 +77,12 @@ public final class GameRunner {
         }
     }
 
+    /**
+     * Determines the correct word to use in messages based on the number of attempts.
+     *
+     * @param attempts the number of attempts made
+     * @return a string representing the number of attempts
+     */
     static String attemptsWord(int attempts) {
         int mod10 = attempts % DECIMAL_BASE;
         int mod100 = attempts % HUNDRED_BASE;
@@ -78,6 +98,11 @@ public final class GameRunner {
         return "попыток";
     }
 
+    /**
+     * Reads a line of input from the user.
+     *
+     * @return the line of input, or null if the input stream is closed
+     */
     private String readLine() {
         try {
             return in.readLine();

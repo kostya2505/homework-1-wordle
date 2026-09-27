@@ -11,20 +11,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a command to check word guesses against an answer.
+ */
 public final class CheckCommand {
 
     private final PrintStream out;
     private final Dictionary dictionary;
 
-    public CheckCommand(PrintStream out) {
-        this(out, DictionaryLoader.load());
-    }
-
+    /**
+     * Constructs a new CheckCommand with the specified output stream and dictionary.
+     *
+     * @param out       the output stream to use for printing messages
+     * @param dictionary the dictionary to use for the game
+     */
     public CheckCommand(PrintStream out, Dictionary dictionary) {
         this.out = Objects.requireNonNull(out);
         this.dictionary = Objects.requireNonNull(dictionary);
     }
 
+    /**
+     * Constructs a new CheckCommand with the specified output stream and a default dictionary.
+     *
+     * @param out the output stream to use for printing messages
+     */
+    public CheckCommand(PrintStream out) {
+        this(out, DictionaryLoader.load());
+    }
+
+    /**
+     * Runs the command with the provided arguments.
+     *
+     * @param args the command line arguments
+     * @return the exit code (0 for success, non-zero for failure)
+     */
     public int run(String[] args) {
         String answer = null;
         List<String> guesses = new ArrayList<>();
@@ -85,6 +105,15 @@ public final class CheckCommand {
         return 0;
     }
 
+    /**
+     * Requires a value for a command line flag.
+     *
+     * @param args the command line arguments
+     * @param i    the index of the flag value
+     * @param s    the flag name
+     * @return the flag value
+     * @throws IllegalArgumentException if the flag value is missing
+     */
     private String requireValue(String[] args, int i, String s) {
         if (i >= args.length) {
             throw new IllegalArgumentException("Флаг " + s + " требует значения");

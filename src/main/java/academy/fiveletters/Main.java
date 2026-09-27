@@ -1,20 +1,20 @@
 package academy.fiveletters;
 
+import academy.fiveletters.cli.CheckCommand;
+import academy.fiveletters.cli.ConsoleApp;
 import academy.fiveletters.game.Dictionary;
 import academy.fiveletters.game.DictionaryLoader;
 import academy.fiveletters.game.Game;
 import academy.fiveletters.game.GameSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.function.Supplier;
 
 /** Точка входа в игру «5 букв». */
 public final class Main {
-
-    /** Логгер для логирования информации и ошибок. */
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-
-    /** Константа для значения seed. */
-    private static final long SEED = 42L;
 
     /** Приватный конструктор для запрета создания экземпляров этого класса. */
     private Main() {}
@@ -25,16 +25,18 @@ public final class Main {
      * @param args Массив строковых аргументов, переданных при запуске программы.
      */
     static void main(String[] args) {
-        LOG.debug("Аргументы запуска: {}", String.join(" ", args));
+        if (args.length > 0 && "check".equals(args[0])) {
+            int exit = new CheckCommand(System.out).run(Arrays.copyOfRange(args, 1, args.length));
+            System.exit(exit);
+        }
 
         Dictionary dictionary = DictionaryLoader.load();
-        LOG.info("Словарь загружен: {} слова", dictionary.size());
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        Random random = new Random();
 
-        GameSession session = Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, SEED);
-        LOG.info("Сессия начата: maxAttempts={}, status={}", session.getMaxAttempts(), session.getStatus());
+        Supplier<GameSession> gameSessionSupplier =
+                () -> Game.startGame(dictionary, Game.DEFAULT_MAX_ATTEMPTS, random.nextLong());
 
-        System.out.println("Сессия создана. Игровой цикл — в MR3.");
-        System.out.println("«5 букв» — шаблон проекта Т-Академии.");
-        System.out.println("Игра ещё не реализована. Начни с README.");
+        new ConsoleApp(in, System.out, gameSessionSupplier).run();
     }
 }

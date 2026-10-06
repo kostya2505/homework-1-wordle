@@ -5,7 +5,7 @@ public enum GameStatus {
     /** Indicates that the game is currently in progress. */
     IN_PROGRESS,
     /** Indicates that the game has been won. */
-    WIN,
+    WON,
     /** Indicates that the game has been lost. */
-    LOSE
+    LOST
 }

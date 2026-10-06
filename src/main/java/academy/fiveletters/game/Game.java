@@ -37,58 +37,130 @@ public final class Game {
         return new GameSession(dictionary, answer, maxAttempts);
     }
 
-    public static GuessResult applyGuess(GameSession session, String rawGuess) {
-        Objects.requireNonNull(session, "session");
-
-        if (session.status() != GameStatus.IN_PROGRESS) {
-            throw new IllegalStateException(
-                    "Игра завершена со статусом " + session.status() + ", новые попытки не принимаются");
-        }
-
-        String guess = normalizeAndValidate(rawGuess, session.dictionary());
-        List<LetterStatus> statuses = markLetters(session.answer(), guess);
-
-        session.addAttempt(guess);
-        if (guess.equals(session.answer())) {
-            session.setStatus(GameStatus.WIN);
-        } else if (session.attemptsUsed() >= session.maxAttempts()) {
-            session.setStatus(GameStatus.LOSE);
-        }
-
-        return new GuessResult(guess, statuses, session.status());
+    /**
+     * Applies a guess to the current game session.
+     *
+     * @param session The current game session.
+     * @param guess The user's raw guess.
+     * @return A GuessResult object containing the result of the guess.
+     */
+    public static GuessResult applyGuess(GameSession session, String guess) {
+        return session.state().handleGuess(session, guess);
     }
 
+    static GuessResult processGuess(GameSession session, String guess) {
+        String normalized = normalizeAndValidate(guess, session.dictionary());
+        session.addAttempt(normalized);
+        List<LetterStatus> statuses = markLetters(session.answer(), normalized);
+        return new GuessResult(normalized, statuses);
+    }
+
+    /**
+     * Normalizes and validates the user's guess.
+     *
+     * @param rawGuess The user's raw guess.
+     * @param dictionary The dictionary to validate against.
+     * @return The normalized guess.
+     * @throws InvalidGuessException If the guess is invalid.
+     */
     private static String normalizeAndValidate(String rawGuess, Dictionary dictionary) {
         if (rawGuess == null) {
             throw new InvalidGuessException("Ввод не может быть null");
         }
         String guess = rawGuess.toLowerCase(Locale.ROOT);
+        validateLength(guess);
+        validateLetters(guess, rawGuess);
+        validateInDictionary(guess, dictionary);
+        return guess;
+    }
+
+    /**
+     * Validates the length of the guess.
+     *
+     * @param guess The guess to validate.
+     * @throws InvalidGuessException If the length is invalid.
+     */
+    private static void validateLength(String guess) {
         if (guess.length() != Dictionary.WORD_LENGTH) {
             throw new InvalidGuessException(
                     "Ожидалось ровно " + Dictionary.WORD_LENGTH + " букв, получено " + guess.length());
         }
+    }
+
+    /**
+     * Validates the letters in the guess.
+     *
+     * @param guess The guess to validate.
+     * @param rawGuess The raw user input.
+     * @throws InvalidGuessException If the letters are invalid.
+     */
+    private static void validateLetters(String guess, String rawGuess) {
         for (int i = 0; i < guess.length(); i++) {
             if (!Character.isLetter(guess.charAt(i))) {
                 throw new InvalidGuessException("Допустимы только буквы: \"" + rawGuess + "\"");
             }
         }
+    }
+
+    /**
+     * Validates that the guess is in the dictionary.
+     *
+     * @param guess The guess to validate.
+     * @param dictionary The dictionary to check against.
+     * @throws InvalidGuessException If the guess is not in the dictionary.
+     */
+    private static void validateInDictionary(String guess, Dictionary dictionary) {
         if (!dictionary.contains(guess)) {
             throw new InvalidGuessException("Слова нет в словаре: \"" + guess + "\"");
         }
-        return guess;
     }
 
+    /**
+     * Marks the status of each letter in the guess.
+     *
+     * @param answer The correct answer.
+     * @param guess The user's guess.
+     * @return A list of LetterStatus objects representing the status of each letter.
+     */
     static List<LetterStatus> markLetters(String answer, String guess) {
         int n = Dictionary.WORD_LENGTH;
         LetterStatus[] result = new LetterStatus[n];
         boolean[] marked = new boolean[n];
 
+        markCorrectPositions(answer, guess, result, marked);
+        markRemainingPositions(answer, guess, result, marked);
+
+        return List.of(result);
+    }
+
+    /**
+     * Marks the correct positions of letters in the guess.
+     *
+     * @param answer The correct answer.
+     * @param guess The user's guess.
+     * @param result The array to store the result of marking.
+     * @param marked The array to mark positions that have been processed.
+     */
+    private static void markCorrectPositions(String answer, String guess, LetterStatus[] result, boolean[] marked) {
+        int n = Dictionary.WORD_LENGTH;
         for (int i = 0; i < n; i++) {
             if (guess.charAt(i) == answer.charAt(i)) {
                 result[i] = LetterStatus.CORRECT;
                 marked[i] = true;
             }
         }
+    }
+
+    /**
+     * Marks the remaining positions of letters in the guess that are not already marked.
+     *
+     * @param answer The correct answer.
+     * @param guess The user's guess.
+     * @param result The array to store the result of marking.
+     * @param marked The array to mark positions that have been processed.
+     */
+    private static void markRemainingPositions(String answer, String guess, LetterStatus[] result, boolean[] marked) {
+        int n = Dictionary.WORD_LENGTH;
         for (int i = 0; i < n; i++) {
             if (result[i] != null) {
                 continue;
@@ -107,8 +179,6 @@ public final class Game {
                 result[i] = LetterStatus.ABSENT;
             }
         }
-
-        return List.of(result);
     }
 
     /**

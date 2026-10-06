@@ -82,6 +82,6 @@ class GuessValidationTest {
         assertThat(upper.status())
                 .as("регистр не влияет")
                 .isEqualTo(lower.status())
-                .isEqualTo(GameStatus.WIN);
+                .isEqualTo(GameStatus.WON);
     }
 }

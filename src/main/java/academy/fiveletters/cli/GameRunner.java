@@ -46,7 +46,7 @@ public final class GameRunner {
 
     /** Runs the game session, allowing the user to make guesses and receive feedback until the game is complete. */
     public void run() {
-        while (gameSession.status() == GameStatus.IN_PROGRESS) {
+        while (!gameSession.state().isGameOver()) {
             out.print("> ");
             out.flush();
 
@@ -60,11 +60,12 @@ public final class GameRunner {
 
                 out.println(formatter.format(result));
 
-                if (result.isWin()) {
+                GameStatus status = gameSession.status();
+                if (status == GameStatus.WON) {
                     out.println("Победа! Слово угадано за "
                             + gameSession.attemptsUsed() + " "
                             + attemptsWord(gameSession.attemptsUsed()));
-                } else if (result.isLose()) {
+                } else if (status == GameStatus.LOST) {
                     out.println("Неудача. Загаданное слово: " + gameSession.answer());
                 } else {
                     out.println("Осталось попыток: " + (gameSession.maxAttempts() - gameSession.attemptsUsed()));

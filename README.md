@@ -39,7 +39,7 @@
 | MR | Область | Статус |
 |---|---|---|
 | **MR1** | Данные и сессия: словарь, seed, модель партии | реализовано |
-| **MR2** | Правила игры: валидация, проверка букв, WIN/LOSE | реализовано |
+| **MR2** | Правила игры: валидация, проверка букв, WON/LOST | реализовано |
 | **MR3** | Интерфейс: меню, несколько игр, детерминированный режим | реализовано |
 
 ---
@@ -54,7 +54,11 @@ src/main/java/academy/fiveletters/
 │   ├── DictionaryLoader.java          — загрузка словаря из classpath
 │   ├── Game.java                      — фабрика сессии + правила игры
 │   ├── GameSession.java               — модель одной партии
-│   ├── GameStatus.java                — IN_PROGRESS | WIN | LOSE
+│   ├── GameState.java                 — состояние партии (интерфейс)
+│   ├── InProgressState.java           — партия идёт
+│   ├── WonState.java                  — партия выиграна (терминально)
+│   ├── LostState.java                 — партия проиграна (терминально)
+│   ├── GameStatus.java                — IN_PROGRESS | WON | LOST
 │   ├── LetterStatus.java              — CORRECT | PRESENT | ABSENT
 │   ├── GuessResult.java               — результат одной попытки
 │   └── InvalidGuessException.java     — некорректный ввод (не тратит попытку)
@@ -86,16 +90,16 @@ src/main/resources/
 | `dictionary` | `Dictionary` | словарь, в котором валидируются попытки |
 | `answer` | `String` | загаданное слово (ровно 5 букв) |
 | `maxAttempts` | `int` | лимит попыток (> 0) |
-| `attemptsUsed` | `int` | сколько попыток уже сделано |
+| `attemptsUsed` | `int` | `attemptsHistory.size()` |
 | `attemptsHistory` | `List<String>` | что вводил игрок |
-| `status` | `GameStatus` | `IN_PROGRESS` / `WIN` / `LOSE` |
+| `status` | `GameStatus` | `IN_PROGRESS` / `WON` / `LOST` |
 
 Инварианты защищены на уровне модели, а не UI:
 
 - слово из 5 букв — проверяется в конструкторе `GameSession` и `Dictionary`;
 - `maxAttempts > 0` — проверяется в конструкторе и в `Game.startGame`;
 - завершённая игра не принимает новые попытки — `addAttempt` бросает
-  `IllegalStateException`, если `status != IN_PROGRESS`.
+  `IllegalStateException`, если `state.isGameOver()` возвращает `true`.
 
 ### Детерминированный выбор слова
 
@@ -152,7 +156,9 @@ GuessResult result = Game.applyGuess(session, guess);
 2. валидирует ввод (см. ниже);
 3. размечает буквы по правилам Wordle;
 4. фиксирует попытку в истории;
-5. обновляет статус партии (`WIN` / `LOSE` / оставляет `IN_PROGRESS`);
+5. делегирует переход состояния (`InProgressState` решает: остаться
+   `IN_PROGRESS`, уйти в `WonState` при победе или в `LostState` при
+   исчерпании попыток);
 6. возвращает `GuessResult` — нормализованный ввод, статусы букв, статус партии.
 
 ### Валидация
@@ -206,14 +212,14 @@ GuessResult result = Game.applyGuess(session, guess);
 
 ### Финалы
 
-- **WIN** — `guess.equals(answer)` → статус `WIN` сразу, независимо от
+- **WON** — `guess.equals(answer)` → статус `WON` сразу, независимо от
   оставшихся попыток.
-- **LOSE** — `attemptsUsed() == maxAttempts` и не угадано → статус `LOSE`.
-- После `WIN` или `LOSE` `applyGuess` бросает `IllegalStateException`:
+- **LOST** — `attemptsUsed() == maxAttempts` и не угадано → статус `LOST`.
+- После `WON` или `LOST` `applyGuess` бросает `IllegalStateException`:
   завершённая партия терминальна.
 
 `session.answer()` возвращает загаданное слово в любом статусе — UI решает,
-когда его показать (при `LOSE` — обязательно, при `WIN` — по желанию).
+когда его показать (при `LOST` — обязательно, при `WON` — по желанию).
 
 ---
 
@@ -368,7 +374,7 @@ while (i < args.length) {
 |---|---|
 | `GuessValidationTest` | длина, не-буквы, слово вне словаря, регистр; попытка не тратится |
 | `LettersTest` | базовый кейс `озеро`/`арбуз` и ловушка `сорок`/`оооом` |
-| `GameEndTest` | WIN при угадывании, LOSE после лимита, ответ виден, завершённая партия не принимает попытки |
+| `GameEndTest` | WON при угадывании, LOST после лимита, ответ виден, завершённая партия не принимает попытки |
 
 ### MR3 — `src/test/java/academy/fiveletters/mandatory/mr3/`
 
@@ -422,7 +428,7 @@ while (i < args.length) {
 
 ### Package-private «шов» для правил
 
-`GameSession.addAttempt` и `updateStatus` — package-private. Менять сессию
+`GameSession.addAttempt` и `setState` — package-private. Менять сессию
 может только `Game` в том же пакете, а внешний код — нет. Публичный API
 сессии (`answer()`, `status()`, `attemptsUsed()`, …) при этом не расширяется.
 
@@ -441,3 +447,11 @@ replay-сессия).
 
 Это позволяет поменять UI (на GUI, на REST, на что угодно) без единой
 правки в `game/`.
+
+### State pattern для хода партии
+
+Переходы партии (`IN_PROGRESS → WON` при угадывании, `IN_PROGRESS → LOST`
+при исчерпании попыток) реализованы через State pattern: интерфейс
+`GameState` и три реализации — `InProgressState`, `WonState`, `LostState`.
+`GameSession` хранит текущее состояние и делегирует ему проверку
+завершённости и обработку попытки.

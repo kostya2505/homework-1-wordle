@@ -19,8 +19,8 @@ public class GameSession {
     /** A history of attempts made in the game. */
     private final List<String> attemptsHistory = new ArrayList<>();
 
-    /** The current status of the game. */
-    private GameStatus status = GameStatus.IN_PROGRESS;
+    /** The current state of the game. */
+    private GameState state = new InProgressState();
 
     /**
      * Constructs a new game session with the given answer and maximum attempts.
@@ -84,12 +84,21 @@ public class GameSession {
     }
 
     /**
+     * Returns the current state of the game.
+     *
+     * @return the game state
+     */
+    public GameState state() {
+        return state;
+    }
+
+    /**
      * Returns the current status of the game.
      *
      * @return the game status
      */
     public GameStatus status() {
-        return status;
+        return state.getStatus();
     }
 
     Dictionary dictionary() {
@@ -103,19 +112,19 @@ public class GameSession {
      * @throws IllegalStateException if the game session is not in progress
      */
     void addAttempt(String attempt) {
-        if (status != GameStatus.IN_PROGRESS) {
-            throw new IllegalStateException("Игра уже завершена со статусом: " + status);
+        if (state.isGameOver()) {
+            throw new IllegalStateException("Игра уже завершена со статусом: " + state.getStatus());
         }
         attemptsHistory.add(attempt);
     }
 
     /**
-     * Sets a new status for the game session.
+     * Sets a new state for the game session.
      *
-     * @param newStatus the new status to set
-     * @throws IllegalArgumentException if the new status is null
+     * @param newState the new state to set
+     * @throws IllegalArgumentException if the new state is null
      */
-    void setStatus(GameStatus newStatus) {
-        this.status = Objects.requireNonNull(newStatus, "newStatus");
+    void setState(GameState newState) {
+        this.state = Objects.requireNonNull(newState, "newState");
     }
 }

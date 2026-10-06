@@ -31,7 +31,7 @@ class GameOutcomeTest {
         GuessResult last = Game.applyGuess(gameSession, ANSWER);
 
         assertThat(last.isWin()).isTrue();
-        assertThat(gameSession.status()).isEqualTo(GameStatus.WIN);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.WON);
         assertThat(gameSession.attemptsUsed()).isEqualTo(2);
         assertThatThrownBy(() -> Game.applyGuess(gameSession, GUESS)).isInstanceOf(IllegalStateException.class);
     }
@@ -45,7 +45,7 @@ class GameOutcomeTest {
             Game.applyGuess(gameSession, GUESS);
         }
 
-        assertThat(gameSession.status()).isEqualTo(GameStatus.LOSE);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.LOST);
         assertThat(gameSession.attemptsUsed()).isEqualTo(6);
         assertThat(gameSession.answer()).isEqualTo(ANSWER);
         assertThatThrownBy(() -> Game.applyGuess(gameSession, ANSWER)).isInstanceOf(IllegalStateException.class);
@@ -60,7 +60,7 @@ class GameOutcomeTest {
             Game.applyGuess(gameSession, GUESS);
         }
 
-        assertThat(gameSession.status()).isEqualTo(GameStatus.LOSE);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.LOST);
         assertThat(gameSession.answer())
                 .as("модель раскрывает ответ после поражения")
                 .isEqualTo(ANSWER);
@@ -72,7 +72,7 @@ class GameOutcomeTest {
         GameSession gameSession = new GameSession(DICT, ANSWER, MAX_ATTEMPTS);
 
         Game.applyGuess(gameSession, ANSWER);
-        assertThat(gameSession.status()).isEqualTo(GameStatus.WIN);
+        assertThat(gameSession.status()).isEqualTo(GameStatus.WON);
 
         int attempts = gameSession.attemptsUsed();
 

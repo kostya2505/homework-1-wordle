@@ -40,6 +40,7 @@ application {
 tasks.named<JavaExec>("run") {
     // Без этого `./gradlew run` не увидит ввод с клавиатуры.
     standardInput = System.`in`
+    jvmArgs(utf8JvmArgs)
 }
 
 dependencies {

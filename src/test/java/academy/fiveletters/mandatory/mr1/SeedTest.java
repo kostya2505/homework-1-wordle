@@ -1,8 +1,13 @@
 package academy.fiveletters.mandatory.mr1;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Disabled;
+import academy.fiveletters.game.Dictionary;
+import academy.fiveletters.game.DictionaryLoader;
+import academy.fiveletters.game.Game;
+import academy.fiveletters.game.GameSession;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,17 +15,29 @@ import org.junit.jupiter.api.Test;
 @DisplayName("MR1. Воспроизводимость по seed")
 class SeedTest {
 
+    private static final int MAX_ATTEMPTS = 6;
+
     @Test
-    @Disabled("MR1: реализуй тест и удали эту строку")
     @DisplayName("Одинаковый seed даёт одинаковое загаданное слово")
     void sameSeedProducesSameAnswer() {
-        fail("Тест не реализован");
+        Dictionary dictionary = DictionaryLoader.load();
+
+        GameSession firstGameSession = Game.startGame(dictionary, MAX_ATTEMPTS, 42L);
+        GameSession secondGameSession = Game.startGame(dictionary, MAX_ATTEMPTS, 42L);
+
+        assertThat(secondGameSession.answer()).as("repeat with the same seed").isEqualTo(firstGameSession.answer());
     }
 
     @Test
-    @Disabled("MR1: реализуй тест и удали эту строку")
     @DisplayName("Разные seed'ы дают разные слова хотя бы иногда")
     void differentSeedsProduceDifferentAnswers() {
-        fail("Тест не реализован");
+        Dictionary dictionary = DictionaryLoader.load();
+
+        Set<String> answers = new HashSet<>();
+        for (long seed = 0; seed < 100; seed++) {
+            answers.add(Game.startGame(dictionary, MAX_ATTEMPTS, seed).answer());
+        }
+
+        assertThat(answers).as("more than one word on 100 different seeds").hasSizeGreaterThan(1);
     }
 }
